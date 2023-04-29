@@ -35,6 +35,24 @@ toRoute url =
     Maybe.withDefault NotFound (Url.Parser.parse route url)
 
 
+urlToBoard : Maybe Url.Url -> Maybe Board
+urlToBoard maybeUrl =
+    case maybeUrl of
+        Just url ->
+            case toRoute url of
+                NotFound ->
+                    Nothing
+
+                Home ->
+                    Nothing
+
+                Board encodedString ->
+                    decodeBoard encodedString
+
+        Nothing ->
+            Nothing
+
+
 
 -- MAIN
 
@@ -66,26 +84,27 @@ type alias BoardCell =
 type alias Model =
     { key : Nav.Key
     , url : Url.Url
+    , board : Maybe Board
     }
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
 init _ url key =
-    ( Model key url, Cmd.none )
+    ( Model key url (urlToBoard (Just url)), Cmd.none )
 
 
 choices : List String
 choices =
     [ "Night time shades"
     , "Double fisting"
-    , "Separated at crosswalk"
+    , "Separated at the crosswalk"
     , "Dumb hat"
     , "Looser board"
     , "Skate board"
     , "Fanny pack"
     , "Matching outfit"
     , "Guy on guy scooter"
-    , "Dead parrot head"
+    , "Dead Parrot Head"
     , "Crosswalk coward"
     , "Shirtless dude"
     , "Memaw"
@@ -96,11 +115,11 @@ choices =
     , "Bouncer bounces"
     , "Drop something"
     , "Drop/spill food/drink"
-    , "Litter bug"
+    , "Litterbug"
     , "Jeans in flip-flops"
     , "Mullet"
     , "Bachelorette party"
-    , "Go-kart"
+    , "Go cart"
     , "Luxury car"
     , "Drunk walk"
     , "Wheel chair"
@@ -120,9 +139,11 @@ choices =
     , "Yawning"
     , "Trying to get into a wrong car"
     , "Formal attire"
-    , "Hoofing it"
+    , "Hoofin it"
     , "Offensive T-shirt"
     , "Handshake"
+    , "Couple fighting / regular fight"
+    , "Cop car / ambulance / fire truck"
     ]
 
 
@@ -135,6 +156,7 @@ type Msg
     | UrlChanged Url.Url
     | GenerateBoard
     | NewBoard ( List String, List String )
+    | CellClicked Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -143,13 +165,13 @@ update msg model =
         LinkClicked urlRequest ->
             case urlRequest of
                 Browser.Internal url ->
-                    ( model, Nav.pushUrl model.key (Url.toString url) )
+                    ( { model | board = urlToBoard (Just url) }, Nav.pushUrl model.key (Url.toString url) )
 
                 Browser.External href ->
                     ( model, Nav.load href )
 
         UrlChanged url ->
-            ( { model | url = url }
+            ( { model | url = url, board = urlToBoard (Just url) }
             , Cmd.none
             )
 
@@ -159,15 +181,42 @@ update msg model =
         NewBoard ( selected, _ ) ->
             case encodeBoard (makeBoard selected) of
                 Just encodedBoard ->
-                    ( model, Nav.pushUrl model.key ("/board/" ++ encodedBoard) )
+                    ( { model | board = urlToBoard (Url.fromString ("/board/" ++ encodedBoard)) }, Nav.pushUrl model.key ("/board/" ++ encodedBoard) )
 
                 Nothing ->
                     ( model, Cmd.none )
+
+        CellClicked position ->
+            ( { model
+                | board =
+                    case model.board of
+                        Nothing ->
+                            Nothing
+
+                        Just board ->
+                            Just (clickCell board position)
+              }
+            , Cmd.none
+            )
 
 
 makeBoard : List String -> Board
 makeBoard values =
     List.map2 Tuple.pair (List.concat [ List.take 12 values, [ "Free Space" ], List.drop 12 values ]) (List.repeat 25 False)
+
+
+clickCell : Board -> Int -> Board
+clickCell board clickedOn =
+    let
+        toggleCell : Int -> BoardCell -> BoardCell
+        toggleCell position ( value, state ) =
+            if position == clickedOn then
+                ( value, not state )
+
+            else
+                ( value, state )
+    in
+    List.indexedMap toggleCell board
 
 
 
@@ -185,26 +234,18 @@ subscriptions _ =
 
 view : Model -> Browser.Document Msg
 view model =
-    case toRoute model.url of
-        Home ->
-            viewHome Nothing
-
-        NotFound ->
-            viewHome Nothing
-
-        Board str ->
-            viewHome (decodeBoard str)
+    viewHome model.board
 
 
 viewHome : Maybe Board -> Browser.Document Msg
 viewHome board =
-    { title = "F**kFace Sloppy Joes Bingo"
+    { title = "F**kFace Sloppy Joe's Bingo"
     , body =
-        [ div [ class "container my-4" ]
-            [ h1 [ class "mb-3" ] [ text "F**kFace Sloppy Joes Bingo" ]
+        [ div [ class "container mt-5" ]
+            [ h1 [ class "mb-3" ] [ text "F**kFace Sloppy Joe's Bingo" ]
             , ul []
                 [ li []
-                    [ span [] [ text "F**kFace Sloppy Joes Bingo being played -> " ]
+                    [ span [] [ text "F**kFace Sloppy Joe's Bingo being played -> " ]
                     , a [ href "https://www.youtube.com/watch?v=kxsJ4PW_R04", target "_blank" ] [ text "[video]" ]
                     ]
                 , li []
@@ -212,38 +253,54 @@ viewHome board =
                     , a [ href "https://liveduvalstreet.com/", target "_blank" ] [ text "[stream]" ]
                     ]
                 ]
-            , viewBoard board
+            , generateButton board
             ]
+        , viewBoard board
         ]
     }
+
+
+generateButton : Maybe Board -> Html Msg
+generateButton maybeBoard =
+    case maybeBoard of
+        Nothing ->
+            button [ class "btn btn-primary my-3", onClick GenerateBoard ] [ text "Generate Board" ]
+
+        Just board ->
+            div []
+                [ p []
+                    [ text "Board link: "
+                    , viewBoardLink board
+                    ]
+                , button [ class "btn btn-danger btn-sm", onClick GenerateBoard ] [ text "Re-Generate Board" ]
+                ]
 
 
 viewBoard : Maybe Board -> Html Msg
 viewBoard maybeBoard =
     case maybeBoard of
         Nothing ->
-            button [ class "btn btn-primary my-3", onClick GenerateBoard ] [ text "Generate Board" ]
+            div [] []
 
         Just board ->
-            div [ class "mt-3" ]
-                [ p []
-                    [ text "Board link: "
-                    , viewBoardLink board
-                    ]
-                , button [ class "btn btn-danger", onClick GenerateBoard ] [ text "Re-Generate Board" ]
-                , viewJustBoard board
+            div [ class "container mt-4 mb-5" ]
+                [ div [ class "board" ] (List.indexedMap viewCell board)
                 ]
 
 
-viewJustBoard : Board -> Html msg
-viewJustBoard board =
-    div [ class "mt-4" ]
-        (List.indexedMap viewCell board)
+viewCell : Int -> BoardCell -> Html Msg
+viewCell index ( cell, state ) =
+    if cell == "Free Space" then
+        div [ class "cell freespace" ] []
 
+    else if state then
+        button [ class "cell clicked", onClick (CellClicked index) ]
+            [ div [] [ text cell ]
+            , img [ src "/fkface.webp", class "overlay" ] []
+            ]
 
-viewCell : Int -> BoardCell -> Html msg
-viewCell index ( cell, click ) =
-    div [] [ text (String.fromInt index ++ ". " ++ cell) ]
+    else
+        button [ class "cell", onClick (CellClicked index) ] [ text cell ]
 
 
 viewBoardLink : Board -> Html msg
@@ -254,7 +311,7 @@ viewBoardLink board =
     in
     case maybeEncodedBoard of
         Just encodedBoard ->
-            a [ href ("/board/" ++ encodedBoard), target "_blank" ] [ text (String.slice 0 32 encodedBoard) ]
+            a [ href ("/board/" ++ encodedBoard) ] [ text (String.slice 0 32 encodedBoard) ]
 
         Nothing ->
             text ""
@@ -266,7 +323,7 @@ encodeBoard board =
         values =
             List.map (\( cell, _ ) -> cell) board
     in
-    Bytes.Encode.string (List.foldl (\a b -> a ++ "," ++ b) "" values)
+    Bytes.Encode.string (List.foldr (\a b -> a ++ "," ++ b) "" values)
         |> Bytes.Encode.encode
         |> Base64.fromBytes
 

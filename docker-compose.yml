@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    container_name: fkface-bingo
+    volumes:
+      - ./dist:/usr/share/nginx/html
+    ports:
+      - "8080:80"

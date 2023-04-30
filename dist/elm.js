@@ -7671,8 +7671,15 @@ var $author$project$Main$generateButton = function (maybeBoard) {
 	}
 };
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $elm$core$List$filter = F2(
@@ -7813,13 +7820,6 @@ var $elm$html$Html$Attributes$boolProperty = F2(
 			$elm$json$Json$Encode$bool(bool));
 	});
 var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
-var $elm$html$Html$img = _VirtualDom_node('img');
-var $elm$html$Html$Attributes$src = function (url) {
-	return A2(
-		$elm$html$Html$Attributes$stringProperty,
-		'src',
-		_VirtualDom_noJavaScriptOrHtmlUri(url));
-};
 var $author$project$Main$viewCell = F3(
 	function (index, _v0, hasWon) {
 		var cell = _v0.a;
@@ -7981,7 +7981,30 @@ var $author$project$Main$viewHome = function (board) {
 							])),
 						$author$project$Main$generateButton(board)
 					])),
-				$author$project$Main$viewBoard(board)
+				$author$project$Main$viewBoard(board),
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('d-none')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('/fkface.webp')
+							]),
+						_List_Nil),
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('/fkface-red.png')
+							]),
+						_List_Nil)
+					]))
 			]),
 		aE: 'F**kFace Sloppy Joe\'s Bingo'
 	};

@@ -275,6 +275,10 @@ viewHome board =
             , generateButton board
             ]
         , viewBoard board
+        , div [ class "d-none" ]
+            [ img [ src "/fkface.webp" ] []
+            , img [ src "/fkface-red.png" ] []
+            ]
         ]
     }
 

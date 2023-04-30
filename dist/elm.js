@@ -7783,7 +7783,11 @@ var $author$project$Main$bingoWonPositions = function (board) {
 			_List_fromArray(
 			[3, 8, 13, 18, 23]),
 			_List_fromArray(
-			[4, 9, 14, 19, 24])
+			[4, 9, 14, 19, 24]),
+			_List_fromArray(
+			[0, 6, 12, 18, 24]),
+			_List_fromArray(
+			[4, 8, 12, 16, 20])
 		]);
 	var clicks = $author$project$Main$positionsClicked(board);
 	var isWinningLine = function (line) {

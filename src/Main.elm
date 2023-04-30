@@ -407,6 +407,8 @@ bingoWonPositions board =
             , [ 2, 7, 12, 17, 22 ]
             , [ 3, 8, 13, 18, 23 ]
             , [ 4, 9, 14, 19, 24 ]
+            , [ 0, 6, 12, 18, 24 ]
+            , [ 4, 8, 12, 16, 20 ]
             ]
     in
     List.filter isWinningLine lines

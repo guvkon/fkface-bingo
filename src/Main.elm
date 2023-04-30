@@ -11,6 +11,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Random
 import Random.List
+import Set
 import Tuple
 import Url
 import Url.Parser exposing ((</>))
@@ -206,7 +207,21 @@ update msg model =
 
 makeBoard : List String -> Board
 makeBoard values =
-    List.map2 Tuple.pair (List.concat [ List.take 12 values, [ "Free Space" ], List.drop 12 values ]) (List.repeat 25 False)
+    List.map2 Tuple.pair (List.concat [ List.take 12 values, [ "Free Space" ], List.drop 12 values ]) defaultSelects
+
+
+defaultSelects : List Bool
+defaultSelects =
+    let
+        map idx _ =
+            if idx == 12 then
+                True
+
+            else
+                False
+    in
+    List.repeat 25 False
+        |> List.indexedMap map
 
 
 clickCell : Board -> Int -> Board
@@ -288,19 +303,35 @@ viewBoard maybeBoard =
 
         Just board ->
             div [ class "container mt-4 mb-5" ]
-                [ div [ class "board" ] (List.indexedMap viewCell board)
+                [ div [ class "board" ] (List.indexedMap (\idx cell -> viewCell idx cell (isWinningCell board idx)) board)
                 ]
 
 
-viewCell : Int -> BoardCell -> Html Msg
-viewCell index ( cell, state ) =
+viewCell : Int -> BoardCell -> Bool -> Html Msg
+viewCell index ( cell, state ) hasWon =
+    let
+        addCls =
+            if hasWon then
+                " won"
+
+            else
+                ""
+    in
     if cell == "Free Space" then
-        button [ class "cell freespace", disabled True ] []
+        button [ class ("cell freespace" ++ addCls), disabled True ] []
 
     else if state then
-        button [ class "cell clicked", onClick (CellClicked index) ]
+        button [ class ("cell clicked" ++ addCls), onClick (CellClicked index) ]
             [ div [] [ text cell ]
-            , img [ src "/fkface.webp", class "overlay" ] []
+            , img
+                [ if hasWon then
+                    src "/fkface-red.png"
+
+                  else
+                    src "/fkface.webp"
+                , class "overlay"
+                ]
+                []
             ]
 
     else
@@ -336,7 +367,7 @@ decodeBoard : String -> Maybe Board
 decodeBoard encoded =
     let
         valuesToBoard values =
-            List.map2 Tuple.pair values (List.repeat 25 False)
+            List.map2 Tuple.pair values defaultSelects
     in
     case Base64.toBytes encoded of
         Just bytes ->
@@ -349,3 +380,73 @@ decodeBoard encoded =
 
         Nothing ->
             Nothing
+
+
+bingoWonPositions : Board -> List Int
+bingoWonPositions board =
+    let
+        clicks =
+            positionsClicked board
+
+        isWinningLine : List Int -> Bool
+        isWinningLine line =
+            List.foldl (\idx acc -> acc && List.member idx clicks) True line
+
+        lines =
+            [ List.range 0 4
+            , List.range 5 9
+            , List.range 10 14
+            , List.range 15 19
+            , List.range 20 24
+            , [ 0, 5, 10, 15, 20 ]
+            , [ 1, 6, 11, 16, 21 ]
+            , [ 2, 7, 12, 17, 22 ]
+            , [ 3, 8, 13, 18, 23 ]
+            , [ 4, 9, 14, 19, 24 ]
+            ]
+    in
+    List.filter isWinningLine lines
+        |> List.concat
+        |> Set.fromList
+        |> Set.toList
+
+
+isWinningCell : Board -> Int -> Bool
+isWinningCell board pos =
+    bingoWonPositions board
+        |> List.member pos
+
+
+bingo : Board -> Bool
+bingo board =
+    bingoWonPositions board
+        |> List.isEmpty
+        |> not
+
+
+fullBingo : Board -> Bool
+fullBingo board =
+    bingoWonPositions board
+        |> List.length
+        |> (==) 25
+
+
+positionsClicked : Board -> List Int
+positionsClicked board =
+    List.indexedMap
+        (\idx ( _, clicked ) ->
+            if clicked then
+                idx
+
+            else
+                -1
+        )
+        board
+        |> List.filterMap
+            (\idx ->
+                if idx == -1 then
+                    Nothing
+
+                else
+                    Just idx
+            )

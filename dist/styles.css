@@ -39,6 +39,10 @@ body {
     background-size: cover;
 }
 
+.cell.freespace.won {
+    background-image: url("/fkface-red.png")
+}
+
 .cell.clicked .overlay {
     width: 100%;
     position: absolute !important;

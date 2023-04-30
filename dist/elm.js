@@ -5541,10 +5541,6 @@ var $elm$bytes$Bytes$Decode$decode = F2(
 		var decoder = _v0;
 		return A2(_Bytes_decode, decoder, bs);
 	});
-var $elm$core$Tuple$pair = F2(
-	function (a, b) {
-		return _Utils_Tuple2(a, b);
-	});
 var $elm$core$List$repeatHelp = F3(
 	function (result, n, value) {
 		repeatHelp:
@@ -5565,6 +5561,20 @@ var $elm$core$List$repeatHelp = F3(
 var $elm$core$List$repeat = F2(
 	function (n, value) {
 		return A3($elm$core$List$repeatHelp, _List_Nil, n, value);
+	});
+var $author$project$Main$defaultSelects = function () {
+	var map = F2(
+		function (idx, _v0) {
+			return (idx === 12) ? true : false;
+		});
+	return A2(
+		$elm$core$List$indexedMap,
+		map,
+		A2($elm$core$List$repeat, 25, false));
+}();
+var $elm$core$Tuple$pair = F2(
+	function (a, b) {
+		return _Utils_Tuple2(a, b);
 	});
 var $elm$bytes$Bytes$Decode$Decoder = $elm$core$Basics$identity;
 var $elm$bytes$Bytes$Decode$string = function (n) {
@@ -5803,11 +5813,7 @@ var $danfishgold$base64_bytes$Base64$toBytes = $danfishgold$base64_bytes$Encode$
 var $elm$bytes$Bytes$width = _Bytes_width;
 var $author$project$Main$decodeBoard = function (encoded) {
 	var valuesToBoard = function (values) {
-		return A3(
-			$elm$core$List$map2,
-			$elm$core$Tuple$pair,
-			values,
-			A2($elm$core$List$repeat, 25, false));
+		return A3($elm$core$List$map2, $elm$core$Tuple$pair, values, $author$project$Main$defaultSelects);
 	};
 	var _v0 = $danfishgold$base64_bytes$Base64$toBytes(encoded);
 	if (!_v0.$) {
@@ -7437,7 +7443,7 @@ var $author$project$Main$makeBoard = function (values) {
 					['Free Space']),
 					A2($elm$core$List$drop, 12, values)
 				])),
-		A2($elm$core$List$repeat, 25, false));
+		$author$project$Main$defaultSelects);
 };
 var $elm$browser$Browser$Navigation$pushUrl = _Browser_pushUrl;
 var $elm$url$Url$addPort = F2(
@@ -7669,6 +7675,132 @@ var $elm$html$Html$li = _VirtualDom_node('li');
 var $elm$html$Html$span = _VirtualDom_node('span');
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$Set$Set_elm_builtin = $elm$core$Basics$identity;
+var $elm$core$Set$empty = $elm$core$Dict$empty;
+var $elm$core$Set$insert = F2(
+	function (key, _v0) {
+		var dict = _v0;
+		return A3($elm$core$Dict$insert, key, 0, dict);
+	});
+var $elm$core$Set$fromList = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
+};
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _v0 = f(mx);
+		if (!_v0.$) {
+			var x = _v0.a;
+			return A2($elm$core$List$cons, x, xs);
+		} else {
+			return xs;
+		}
+	});
+var $elm$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$foldr,
+			$elm$core$List$maybeCons(f),
+			_List_Nil,
+			xs);
+	});
+var $author$project$Main$positionsClicked = function (board) {
+	return A2(
+		$elm$core$List$filterMap,
+		function (idx) {
+			return _Utils_eq(idx, -1) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(idx);
+		},
+		A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (idx, _v0) {
+					var clicked = _v0.b;
+					return clicked ? idx : (-1);
+				}),
+			board));
+};
+var $author$project$Main$bingoWonPositions = function (board) {
+	var lines = _List_fromArray(
+		[
+			A2($elm$core$List$range, 0, 4),
+			A2($elm$core$List$range, 5, 9),
+			A2($elm$core$List$range, 10, 14),
+			A2($elm$core$List$range, 15, 19),
+			A2($elm$core$List$range, 20, 24),
+			_List_fromArray(
+			[0, 5, 10, 15, 20]),
+			_List_fromArray(
+			[1, 6, 11, 16, 21]),
+			_List_fromArray(
+			[2, 7, 12, 17, 22]),
+			_List_fromArray(
+			[3, 8, 13, 18, 23]),
+			_List_fromArray(
+			[4, 9, 14, 19, 24])
+		]);
+	var clicks = $author$project$Main$positionsClicked(board);
+	var isWinningLine = function (line) {
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (idx, acc) {
+					return acc && A2($elm$core$List$member, idx, clicks);
+				}),
+			true,
+			line);
+	};
+	return $elm$core$Set$toList(
+		$elm$core$Set$fromList(
+			$elm$core$List$concat(
+				A2($elm$core$List$filter, isWinningLine, lines))));
+};
+var $author$project$Main$isWinningCell = F2(
+	function (board, pos) {
+		return A2(
+			$elm$core$List$member,
+			pos,
+			$author$project$Main$bingoWonPositions(board));
+	});
 var $author$project$Main$CellClicked = function (a) {
 	return {$: 4, a: a};
 };
@@ -7688,22 +7820,23 @@ var $elm$html$Html$Attributes$src = function (url) {
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
-var $author$project$Main$viewCell = F2(
-	function (index, _v0) {
+var $author$project$Main$viewCell = F3(
+	function (index, _v0, hasWon) {
 		var cell = _v0.a;
 		var state = _v0.b;
+		var addCls = hasWon ? ' won' : '';
 		return (cell === 'Free Space') ? A2(
 			$elm$html$Html$button,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('cell freespace'),
+					$elm$html$Html$Attributes$class('cell freespace' + addCls),
 					$elm$html$Html$Attributes$disabled(true)
 				]),
 			_List_Nil) : (state ? A2(
 			$elm$html$Html$button,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('cell clicked'),
+					$elm$html$Html$Attributes$class('cell clicked' + addCls),
 					$elm$html$Html$Events$onClick(
 					$author$project$Main$CellClicked(index))
 				]),
@@ -7720,7 +7853,7 @@ var $author$project$Main$viewCell = F2(
 					$elm$html$Html$img,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$src('/fkface.webp'),
+							hasWon ? $elm$html$Html$Attributes$src('/fkface-red.png') : $elm$html$Html$Attributes$src('/fkface.webp'),
 							$elm$html$Html$Attributes$class('overlay')
 						]),
 					_List_Nil)
@@ -7756,7 +7889,17 @@ var $author$project$Main$viewBoard = function (maybeBoard) {
 						[
 							$elm$html$Html$Attributes$class('board')
 						]),
-					A2($elm$core$List$indexedMap, $author$project$Main$viewCell, board))
+					A2(
+						$elm$core$List$indexedMap,
+						F2(
+							function (idx, cell) {
+								return A3(
+									$author$project$Main$viewCell,
+									idx,
+									cell,
+									A2($author$project$Main$isWinningCell, board, idx));
+							}),
+						board))
 				]));
 	}
 };

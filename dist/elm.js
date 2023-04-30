@@ -7672,6 +7672,15 @@ var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$Main$CellClicked = function (a) {
 	return {$: 4, a: a};
 };
+var $elm$json$Json$Encode$bool = _Json_wrap;
+var $elm$html$Html$Attributes$boolProperty = F2(
+	function (key, bool) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$bool(bool));
+	});
+var $elm$html$Html$Attributes$disabled = $elm$html$Html$Attributes$boolProperty('disabled');
 var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
@@ -7684,10 +7693,11 @@ var $author$project$Main$viewCell = F2(
 		var cell = _v0.a;
 		var state = _v0.b;
 		return (cell === 'Free Space') ? A2(
-			$elm$html$Html$div,
+			$elm$html$Html$button,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('cell freespace')
+					$elm$html$Html$Attributes$class('cell freespace'),
+					$elm$html$Html$Attributes$disabled(true)
 				]),
 			_List_Nil) : (state ? A2(
 			$elm$html$Html$button,

@@ -295,7 +295,7 @@ viewBoard maybeBoard =
 viewCell : Int -> BoardCell -> Html Msg
 viewCell index ( cell, state ) =
     if cell == "Free Space" then
-        div [ class "cell freespace" ] []
+        button [ class "cell freespace", disabled True ] []
 
     else if state then
         button [ class "cell clicked", onClick (CellClicked index) ]

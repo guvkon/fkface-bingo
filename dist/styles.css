@@ -12,13 +12,14 @@ body {
     display: grid;
     gap: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    max-width: 790px;
 }
 
 .cell {
-    width: 175px;
-    height: 175px;
+    width: 150px;
+    height: 150px;
     vertical-align: middle;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-family: 'Ubuntu Condensed', sans-serif;
     position: relative;
     border: 1px solid #000;

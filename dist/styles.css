@@ -2,7 +2,7 @@ body {
     font-family: 'Ubuntu Mono', monospace;
 
     background-color: #fff;
-    background-image: url("https://cdn.sstatic.net/Sites/askubuntu/img/site-background-image.png?v=29bccd27864c");
+    background-image: url("/background.png");
     background-attachment: scroll;
     background-repeat: repeat;
     background-size: auto;

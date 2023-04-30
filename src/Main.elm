@@ -99,7 +99,7 @@ choices =
     , "Double fisting"
     , "Separated at the crosswalk"
     , "Dumb hat"
-    , "Looser board"
+    , "Loser board"
     , "Skate board"
     , "Fanny pack"
     , "Matching outfit"
@@ -131,6 +131,7 @@ choices =
     , "Twerking"
     , "Sitting on the street"
     , "Chug"
+    , "Hug"
     , "Aggressive honking"
     , "Trip"
     , "Someone yells for someone to wait up"
@@ -144,6 +145,9 @@ choices =
     , "Handshake"
     , "Couple fighting / regular fight"
     , "Cop car / ambulance / fire truck"
+    , "Crying"
+    , "Sucking on a chili dog"
+    , "High five"
     ]
 
 

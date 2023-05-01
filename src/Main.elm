@@ -257,11 +257,15 @@ view model =
 
 
 viewHome : Maybe Board -> Browser.Document Msg
-viewHome board =
+viewHome maybeBoard =
     { title = "F**kFace Sloppy Joe's Bingo"
     , body =
         [ div [ class "container mt-5" ]
             [ h1 [ class "mb-3" ] [ text "F**kFace Sloppy Joe's Bingo" ]
+            , div [ class "d-none" ]
+                [ img [ src "/fkface.webp" ] []
+                , img [ src "/fkface-red.png" ] []
+                ]
             , ul []
                 [ li []
                     [ span [] [ text "F**kFace Sloppy Joe's Bingo being played -> " ]
@@ -272,13 +276,18 @@ viewHome board =
                     , a [ href "https://liveduvalstreet.com/", target "_blank" ] [ text "[stream]" ]
                     ]
                 ]
-            , generateButton board
+            , generateButton maybeBoard
             ]
-        , viewBoard board
-        , div [ class "d-none" ]
-            [ img [ src "/fkface.webp" ] []
-            , img [ src "/fkface-red.png" ] []
-            ]
+        , case maybeBoard of
+            Nothing ->
+                div [] []
+
+            Just board ->
+                div []
+                    [ viewResults board
+                    , viewBoard board
+                    ]
+        , footer [ class "container py-4" ] []
         ]
     }
 
@@ -299,16 +308,11 @@ generateButton maybeBoard =
                 ]
 
 
-viewBoard : Maybe Board -> Html Msg
-viewBoard maybeBoard =
-    case maybeBoard of
-        Nothing ->
-            div [] []
-
-        Just board ->
-            div [ class "container mt-4 mb-5" ]
-                [ div [ class "board" ] (List.indexedMap (\idx cell -> viewCell idx cell (isWinningCell board idx)) board)
-                ]
+viewBoard : Board -> Html Msg
+viewBoard board =
+    div [ class "container my-4" ]
+        [ div [ class "board" ] (List.indexedMap (\idx cell -> viewCell idx cell (isWinningCell board idx)) board)
+        ]
 
 
 viewCell : Int -> BoardCell -> Bool -> Html Msg
@@ -356,6 +360,41 @@ viewBoardLink board =
             text ""
 
 
+viewResults : Board -> Html msg
+viewResults board =
+    div [ class "container my-4 results" ]
+        [ p [ class "mb-0" ]
+            [ text
+                (if fullBingo board then
+                    "Full bingo has been achieved!"
+
+                 else if bingo board then
+                    "Congratulations! You're a bingo getter now. But surely you can get one more:"
+
+                 else
+                    "Bingo list:"
+                )
+            ]
+        , ul []
+            [ li [ class (bingoAchievedClass (List.member freeSpace (bingoWonPositions board))) ] [ text "Bingo with F**kFace space" ]
+            , li [ class (bingoAchievedClass (isWinningAnyLine board horizontalLines)) ] [ text "Horizontal bingo" ]
+            , li [ class (bingoAchievedClass (isWinningAnyLine board verticalLines)) ] [ text "Vertical bingo" ]
+            , li [ class (bingoAchievedClass (isWinningAnyLine board diagonalLines)) ] [ text "Diagonal bingo" ]
+            , li [ class (bingoAchievedClass (isWinningAnyLine board offCenterLines)) ] [ text "Bingo without F**kFace space" ]
+            , li [ class (bingoAchievedClass (fullBingo board)) ] [ text "Full bingo" ]
+            ]
+        ]
+
+
+bingoAchievedClass : Bool -> String
+bingoAchievedClass achieved =
+    if achieved then
+        "achieved"
+
+    else
+        ""
+
+
 encodeBoard : Board -> Maybe String
 encodeBoard board =
     let
@@ -389,32 +428,72 @@ decodeBoard encoded =
 bingoWonPositions : Board -> List Int
 bingoWonPositions board =
     let
-        clicks =
-            positionsClicked board
-
-        isWinningLine : List Int -> Bool
-        isWinningLine line =
-            List.foldl (\idx acc -> acc && List.member idx clicks) True line
-
         lines =
-            [ List.range 0 4
-            , List.range 5 9
-            , List.range 10 14
-            , List.range 15 19
-            , List.range 20 24
-            , [ 0, 5, 10, 15, 20 ]
-            , [ 1, 6, 11, 16, 21 ]
-            , [ 2, 7, 12, 17, 22 ]
-            , [ 3, 8, 13, 18, 23 ]
-            , [ 4, 9, 14, 19, 24 ]
-            , [ 0, 6, 12, 18, 24 ]
-            , [ 4, 8, 12, 16, 20 ]
-            ]
+            List.concat
+                [ horizontalLines
+                , verticalLines
+                , diagonalLines
+                ]
     in
-    List.filter isWinningLine lines
+    List.filter (isWinningLine board) lines
         |> List.concat
         |> Set.fromList
         |> Set.toList
+
+
+diagonalLines : List (List Int)
+diagonalLines =
+    [ [ 0, 6, 12, 18, 24 ]
+    , [ 4, 8, 12, 16, 20 ]
+    ]
+
+
+horizontalLines : List (List Int)
+horizontalLines =
+    [ List.range 0 4
+    , List.range 5 9
+    , List.range 10 14
+    , List.range 15 19
+    , List.range 20 24
+    ]
+
+
+verticalLines : List (List Int)
+verticalLines =
+    [ [ 0, 5, 10, 15, 20 ]
+    , [ 1, 6, 11, 16, 21 ]
+    , [ 2, 7, 12, 17, 22 ]
+    , [ 3, 8, 13, 18, 23 ]
+    , [ 4, 9, 14, 19, 24 ]
+    ]
+
+
+offCenterLines : List (List Int)
+offCenterLines =
+    [ List.range 0 4
+    , List.range 5 9
+    , List.range 15 19
+    , List.range 20 24
+    , [ 0, 5, 10, 15, 20 ]
+    , [ 1, 6, 11, 16, 21 ]
+    , [ 3, 8, 13, 18, 23 ]
+    , [ 4, 9, 14, 19, 24 ]
+    ]
+
+
+freeSpace : Int
+freeSpace =
+    12
+
+
+isWinningLine : Board -> List Int -> Bool
+isWinningLine board line =
+    List.foldl (\idx acc -> acc && List.member idx (positionsClicked board)) True line
+
+
+isWinningAnyLine : Board -> List (List Int) -> Bool
+isWinningAnyLine board lines =
+    List.foldl (\line acc -> acc || isWinningLine board line) False lines
 
 
 isWinningCell : Board -> Int -> Bool

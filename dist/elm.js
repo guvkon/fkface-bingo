@@ -7581,6 +7581,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 	});
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$html$Html$footer = _VirtualDom_node('footer');
 var $author$project$Main$GenerateBoard = {$: 2};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
@@ -7682,6 +7683,13 @@ var $elm$html$Html$Attributes$src = function (url) {
 };
 var $elm$html$Html$Attributes$target = $elm$html$Html$Attributes$stringProperty('target');
 var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$Main$diagonalLines = _List_fromArray(
+	[
+		_List_fromArray(
+		[0, 6, 12, 18, 24]),
+		_List_fromArray(
+		[4, 8, 12, 16, 20])
+	]);
 var $elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -7703,6 +7711,14 @@ var $elm$core$Set$insert = F2(
 var $elm$core$Set$fromList = function (list) {
 	return A3($elm$core$List$foldl, $elm$core$Set$insert, $elm$core$Set$empty, list);
 };
+var $author$project$Main$horizontalLines = _List_fromArray(
+	[
+		A2($elm$core$List$range, 0, 4),
+		A2($elm$core$List$range, 5, 9),
+		A2($elm$core$List$range, 10, 14),
+		A2($elm$core$List$range, 15, 19),
+		A2($elm$core$List$range, 20, 24)
+	]);
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -7766,44 +7782,44 @@ var $author$project$Main$positionsClicked = function (board) {
 				}),
 			board));
 };
-var $author$project$Main$bingoWonPositions = function (board) {
-	var lines = _List_fromArray(
-		[
-			A2($elm$core$List$range, 0, 4),
-			A2($elm$core$List$range, 5, 9),
-			A2($elm$core$List$range, 10, 14),
-			A2($elm$core$List$range, 15, 19),
-			A2($elm$core$List$range, 20, 24),
-			_List_fromArray(
-			[0, 5, 10, 15, 20]),
-			_List_fromArray(
-			[1, 6, 11, 16, 21]),
-			_List_fromArray(
-			[2, 7, 12, 17, 22]),
-			_List_fromArray(
-			[3, 8, 13, 18, 23]),
-			_List_fromArray(
-			[4, 9, 14, 19, 24]),
-			_List_fromArray(
-			[0, 6, 12, 18, 24]),
-			_List_fromArray(
-			[4, 8, 12, 16, 20])
-		]);
-	var clicks = $author$project$Main$positionsClicked(board);
-	var isWinningLine = function (line) {
+var $author$project$Main$isWinningLine = F2(
+	function (board, line) {
 		return A3(
 			$elm$core$List$foldl,
 			F2(
 				function (idx, acc) {
-					return acc && A2($elm$core$List$member, idx, clicks);
+					return acc && A2(
+						$elm$core$List$member,
+						idx,
+						$author$project$Main$positionsClicked(board));
 				}),
 			true,
 			line);
-	};
+	});
+var $author$project$Main$verticalLines = _List_fromArray(
+	[
+		_List_fromArray(
+		[0, 5, 10, 15, 20]),
+		_List_fromArray(
+		[1, 6, 11, 16, 21]),
+		_List_fromArray(
+		[2, 7, 12, 17, 22]),
+		_List_fromArray(
+		[3, 8, 13, 18, 23]),
+		_List_fromArray(
+		[4, 9, 14, 19, 24])
+	]);
+var $author$project$Main$bingoWonPositions = function (board) {
+	var lines = $elm$core$List$concat(
+		_List_fromArray(
+			[$author$project$Main$horizontalLines, $author$project$Main$verticalLines, $author$project$Main$diagonalLines]));
 	return $elm$core$Set$toList(
 		$elm$core$Set$fromList(
 			$elm$core$List$concat(
-				A2($elm$core$List$filter, isWinningLine, lines))));
+				A2(
+					$elm$core$List$filter,
+					$author$project$Main$isWinningLine(board),
+					lines))));
 };
 var $author$project$Main$isWinningCell = F2(
 	function (board, pos) {
@@ -7874,40 +7890,176 @@ var $author$project$Main$viewCell = F3(
 					$elm$html$Html$text(cell)
 				])));
 	});
-var $author$project$Main$viewBoard = function (maybeBoard) {
-	if (maybeBoard.$ === 1) {
-		return A2($elm$html$Html$div, _List_Nil, _List_Nil);
-	} else {
-		var board = maybeBoard.a;
-		return A2(
-			$elm$html$Html$div,
-			_List_fromArray(
-				[
-					$elm$html$Html$Attributes$class('container mt-4 mb-5')
-				]),
-			_List_fromArray(
-				[
-					A2(
-					$elm$html$Html$div,
-					_List_fromArray(
-						[
-							$elm$html$Html$Attributes$class('board')
-						]),
-					A2(
-						$elm$core$List$indexedMap,
-						F2(
-							function (idx, cell) {
-								return A3(
-									$author$project$Main$viewCell,
-									idx,
-									cell,
-									A2($author$project$Main$isWinningCell, board, idx));
-							}),
-						board))
-				]));
-	}
+var $author$project$Main$viewBoard = function (board) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('container my-4')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('board')
+					]),
+				A2(
+					$elm$core$List$indexedMap,
+					F2(
+						function (idx, cell) {
+							return A3(
+								$author$project$Main$viewCell,
+								idx,
+								cell,
+								A2($author$project$Main$isWinningCell, board, idx));
+						}),
+					board))
+			]));
 };
-var $author$project$Main$viewHome = function (board) {
+var $author$project$Main$bingo = function (board) {
+	return !$elm$core$List$isEmpty(
+		$author$project$Main$bingoWonPositions(board));
+};
+var $author$project$Main$bingoAchievedClass = function (achieved) {
+	return achieved ? 'achieved' : '';
+};
+var $author$project$Main$freeSpace = 12;
+var $author$project$Main$fullBingo = function (board) {
+	return 25 === $elm$core$List$length(
+		$author$project$Main$bingoWonPositions(board));
+};
+var $author$project$Main$isWinningAnyLine = F2(
+	function (board, lines) {
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (line, acc) {
+					return acc || A2($author$project$Main$isWinningLine, board, line);
+				}),
+			false,
+			lines);
+	});
+var $author$project$Main$offCenterLines = _List_fromArray(
+	[
+		A2($elm$core$List$range, 0, 4),
+		A2($elm$core$List$range, 5, 9),
+		A2($elm$core$List$range, 15, 19),
+		A2($elm$core$List$range, 20, 24),
+		_List_fromArray(
+		[0, 5, 10, 15, 20]),
+		_List_fromArray(
+		[1, 6, 11, 16, 21]),
+		_List_fromArray(
+		[3, 8, 13, 18, 23]),
+		_List_fromArray(
+		[4, 9, 14, 19, 24])
+	]);
+var $author$project$Main$viewResults = function (board) {
+	return A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				$elm$html$Html$Attributes$class('container my-4 results')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$p,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('mb-0')
+					]),
+				_List_fromArray(
+					[
+						$elm$html$Html$text(
+						$author$project$Main$fullBingo(board) ? 'Full bingo has been achieved!' : ($author$project$Main$bingo(board) ? 'Congratulations! You\'re a bingo getter now. But surely you can get one more:' : 'Bingo list:'))
+					])),
+				A2(
+				$elm$html$Html$ul,
+				_List_Nil,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									A2(
+										$elm$core$List$member,
+										$author$project$Main$freeSpace,
+										$author$project$Main$bingoWonPositions(board))))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Bingo with F**kFace space')
+							])),
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									A2($author$project$Main$isWinningAnyLine, board, $author$project$Main$horizontalLines)))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Horizontal bingo')
+							])),
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									A2($author$project$Main$isWinningAnyLine, board, $author$project$Main$verticalLines)))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Vertical bingo')
+							])),
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									A2($author$project$Main$isWinningAnyLine, board, $author$project$Main$diagonalLines)))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Diagonal bingo')
+							])),
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									A2($author$project$Main$isWinningAnyLine, board, $author$project$Main$offCenterLines)))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Bingo without F**kFace space')
+							])),
+						A2(
+						$elm$html$Html$li,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class(
+								$author$project$Main$bingoAchievedClass(
+									$author$project$Main$fullBingo(board)))
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Full bingo')
+							]))
+					]))
+			]));
+};
+var $author$project$Main$viewHome = function (maybeBoard) {
 	return {
 		aq: _List_fromArray(
 			[
@@ -7928,6 +8080,29 @@ var $author$project$Main$viewHome = function (board) {
 						_List_fromArray(
 							[
 								$elm$html$Html$text('F**kFace Sloppy Joe\'s Bingo')
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('d-none')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('/fkface.webp')
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('/fkface-red.png')
+									]),
+								_List_Nil)
 							])),
 						A2(
 						$elm$html$Html$ul,
@@ -7983,32 +8158,30 @@ var $author$project$Main$viewHome = function (board) {
 											]))
 									]))
 							])),
-						$author$project$Main$generateButton(board)
+						$author$project$Main$generateButton(maybeBoard)
 					])),
-				$author$project$Main$viewBoard(board),
+				function () {
+				if (maybeBoard.$ === 1) {
+					return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+				} else {
+					var board = maybeBoard.a;
+					return A2(
+						$elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$author$project$Main$viewResults(board),
+								$author$project$Main$viewBoard(board)
+							]));
+				}
+			}(),
 				A2(
-				$elm$html$Html$div,
+				$elm$html$Html$footer,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('d-none')
+						$elm$html$Html$Attributes$class('container py-4')
 					]),
-				_List_fromArray(
-					[
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src('/fkface.webp')
-							]),
-						_List_Nil),
-						A2(
-						$elm$html$Html$img,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$src('/fkface-red.png')
-							]),
-						_List_Nil)
-					]))
+				_List_Nil)
 			]),
 		aE: 'F**kFace Sloppy Joe\'s Bingo'
 	};

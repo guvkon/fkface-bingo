@@ -111,7 +111,7 @@ choices =
     , "Memaw"
     , "Kid out too late"
     , "Ghost tour bus / Street train"
-    , "Trycicle"
+    , "Tricycle"
     , "Pink taxi"
     , "Bouncer bounces"
     , "Drop something"
@@ -136,7 +136,7 @@ choices =
     , "Aggressive honking"
     , "Trip"
     , "Someone yells for someone to wait up"
-    , "Nose pick"
+    , "Nose pick / wedgie pull / crotch grab / spit"
     , "Beach goth"
     , "Yawning"
     , "Trying to get into a wrong car"
@@ -149,6 +149,12 @@ choices =
     , "Crying"
     , "Sucking on a chili dog"
     , "High five"
+    , "Selfie"
+    , "Cover band playing Green Day/Blink 182"
+    , "Puking on Ground/Trash Can"
+    , "Barefoot"
+    , "Almost get hit by a car"
+    , "Can see Facetime screen"
     ]
 
 

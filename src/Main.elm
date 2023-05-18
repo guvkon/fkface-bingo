@@ -100,6 +100,7 @@ choices =
     , "Double fisting"
     , "Separated at the crosswalk"
     , "Dumb hat"
+    , "Cowboy hat"
     , "Loser board"
     , "Skate board"
     , "Fanny pack"

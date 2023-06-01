@@ -6670,7 +6670,7 @@ var $author$project$Main$NewBoard = function (a) {
 	return {$: 3, a: a};
 };
 var $author$project$Main$choices = _List_fromArray(
-	['Night time shades', 'Double fisting', 'Separated at the crosswalk', 'Dumb hat', 'Cowboy hat', 'Loser board', 'Skate board', 'Fanny pack', 'Matching outfit', 'Guy on guy scooter', 'Dead Parrot Head', 'Crosswalk coward', 'Shirtless dude', 'Memaw', 'Kid out too late', 'Ghost tour bus / Street train', 'Tricycle', 'Pink taxi', 'Bouncer bounces', 'Drop something', 'Drop/spill food/drink', 'Litterbug', 'Jeans in flip-flops', 'Mullet', 'Bachelorette party', 'Go cart', 'Luxury car', 'Drunk walk', 'Wheel chair', 'Camera shy', 'Camera acknowledge', 'Bandage dude', 'Pickup / Dropoff', 'Dancing', 'Twerking', 'Sitting on the street', 'Chug', 'Hug', 'Aggressive honking', 'Trip', 'Someone yells for someone to wait up', 'Nose pick / wedgie pull / crotch grab / spit', 'Beach goth', 'Yawning', 'Trying to get into a wrong car', 'Formal attire', 'Hoofin it', 'Offensive T-shirt', 'Handshake', 'Couple fighting / regular fight', 'Cop car / ambulance / fire truck', 'Crying', 'Sucking on a chili dog', 'High five', 'Selfie', 'Cover band playing Green Day/Blink 182', 'Puking on Ground/Trash Can', 'Barefoot', 'Almost get hit by a car', 'Can see Facetime screen']);
+	['Mullet', 'Ghost Tour Bus / Street Train', 'Dropped something', 'Couple fighting / regular fight', 'Car delivery / pickup', 'Tricycle', 'Puking on ground / trash can', 'Dropped / spilled food and drink', 'Beach goth', 'Cop car / ambulance / fire truck', 'Trip', 'Almost get hit by car', 'Bachelorette party', 'Bandage dude', 'Wheelchair', 'Acknowledge camera', 'Selfie', 'Dumb hat', 'Offensive t shirt', 'Kid out late', 'Nose pick / wedgie pull / crotch grab / spit', 'Crying', 'Bouncer bouncing', 'Dancing', 'Luxury car', 'Sitting on the street', 'Dead Parrot Head', 'Can hear the cover band playing Green Day or Blink 182', 'American flag clothes', 'Cowboy hat', 'Can see FaceTime screen', 'Aggressive honking', 'High five', 'Handshake', 'Hug', 'Litterbug', 'Drunk walk', 'Jeans and flip flops', 'Guy-on-guy scooter', 'Meemaw', 'Hoofin it', 'Barefoot', 'Camera shy', 'Pink taxi', 'Doublefisting', 'Formal attire', 'Go cart', 'Skateboard', 'Someone yells to wait up', 'Twerking', 'Nighttime shades', 'Crosswalk coward', 'Separated at the crosswalk', 'Sucking on a chili dog', 'Yawning', 'Matching outfits', 'Trying to get into the wrong car', 'Chug']);
 var $elm$random$Random$Generator = $elm$core$Basics$identity;
 var $elm$random$Random$andThen = F2(
 	function (callback, _v0) {
@@ -7895,7 +7895,7 @@ var $author$project$Main$viewBoard = function (board) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('container my-4')
+				$elm$html$Html$Attributes$class('container-fluid container-lg my-4')
 			]),
 		_List_fromArray(
 			[
@@ -7961,7 +7961,7 @@ var $author$project$Main$viewResults = function (board) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('container my-4 results')
+				$elm$html$Html$Attributes$class('container-fluid container-lg my-4 results')
 			]),
 		_List_fromArray(
 			[
@@ -8067,15 +8067,23 @@ var $author$project$Main$viewHome = function (maybeBoard) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('container mt-5')
+						$elm$html$Html$Attributes$class('container-fluid container-lg mt-3')
 					]),
 				_List_fromArray(
 					[
 						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$src('/header.jpg'),
+								$elm$html$Html$Attributes$class('d-block w-100 header mb-3')
+							]),
+						_List_Nil),
+						A2(
 						$elm$html$Html$h1,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('mb-3')
+								$elm$html$Html$Attributes$class('mb-3 d-none')
 							]),
 						_List_fromArray(
 							[
@@ -8119,7 +8127,7 @@ var $author$project$Main$viewHome = function (maybeBoard) {
 										_List_Nil,
 										_List_fromArray(
 											[
-												$elm$html$Html$text('F**kFace Sloppy Joe\'s Bingo being played -> ')
+												$elm$html$Html$text('Sloppy Bingo being played -> ')
 											])),
 										A2(
 										$elm$html$Html$a,
@@ -8179,11 +8187,11 @@ var $author$project$Main$viewHome = function (maybeBoard) {
 				$elm$html$Html$footer,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('container py-4')
+						$elm$html$Html$Attributes$class('container-fluid container-lg py-4')
 					]),
 				_List_Nil)
 			]),
-		aE: 'F**kFace Sloppy Joe\'s Bingo'
+		aE: 'Sloppy Bingo'
 	};
 };
 var $author$project$Main$view = function (model) {

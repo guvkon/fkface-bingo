@@ -96,66 +96,64 @@ init _ url key =
 
 choices : List String
 choices =
-    [ "Night time shades"
-    , "Double fisting"
-    , "Separated at the crosswalk"
-    , "Dumb hat"
-    , "Cowboy hat"
-    , "Loser board"
-    , "Skate board"
-    , "Fanny pack"
-    , "Matching outfit"
-    , "Guy on guy scooter"
-    , "Dead Parrot Head"
-    , "Crosswalk coward"
-    , "Shirtless dude"
-    , "Memaw"
-    , "Kid out too late"
-    , "Ghost tour bus / Street train"
-    , "Tricycle"
-    , "Pink taxi"
-    , "Bouncer bounces"
-    , "Drop something"
-    , "Drop/spill food/drink"
-    , "Litterbug"
-    , "Jeans in flip-flops"
-    , "Mullet"
-    , "Bachelorette party"
-    , "Go cart"
-    , "Luxury car"
-    , "Drunk walk"
-    , "Wheel chair"
-    , "Camera shy"
-    , "Camera acknowledge"
-    , "Bandage dude"
-    , "Pickup / Dropoff"
-    , "Dancing"
-    , "Twerking"
-    , "Sitting on the street"
-    , "Chug"
-    , "Hug"
-    , "Aggressive honking"
-    , "Trip"
-    , "Someone yells for someone to wait up"
-    , "Nose pick / wedgie pull / crotch grab / spit"
-    , "Beach goth"
-    , "Yawning"
-    , "Trying to get into a wrong car"
-    , "Formal attire"
-    , "Hoofin it"
-    , "Offensive T-shirt"
-    , "Handshake"
+    [ "Mullet"
+    , "Ghost Tour Bus / Street Train"
+    , "Dropped something"
     , "Couple fighting / regular fight"
+    , "Car delivery / pickup"
+    , "Tricycle"
+    , "Puking on ground / trash can"
+    , "Dropped / spilled food and drink"
+    , "Beach goth"
     , "Cop car / ambulance / fire truck"
-    , "Crying"
-    , "Sucking on a chili dog"
-    , "High five"
+    , "Trip"
+    , "Almost get hit by car"
+    , "Bachelorette party"
+    , "Bandage dude"
+    , "Wheelchair"
+    , "Acknowledge camera"
     , "Selfie"
-    , "Cover band playing Green Day/Blink 182"
-    , "Puking on Ground/Trash Can"
+    , "Dumb hat"
+    , "Offensive t shirt"
+    , "Kid out late"
+    , "Nose pick / wedgie pull / crotch grab / spit"
+    , "Crying"
+    , "Bouncer bouncing"
+    , "Dancing"
+    , "Luxury car"
+    , "Sitting on the street"
+    , "Dead Parrot Head"
+    , "Can hear the cover band playing Green Day or Blink 182"
+    , "American flag clothes"
+    , "Cowboy hat"
+    , "Can see FaceTime screen"
+    , "Aggressive honking"
+    , "High five"
+    , "Handshake"
+    , "Hug"
+    , "Litterbug"
+    , "Drunk walk"
+    , "Jeans and flip flops"
+    , "Guy-on-guy scooter"
+    , "Meemaw"
+    , "Hoofin it"
     , "Barefoot"
-    , "Almost get hit by a car"
-    , "Can see Facetime screen"
+    , "Camera shy"
+    , "Pink taxi"
+    , "Doublefisting"
+    , "Formal attire"
+    , "Go cart"
+    , "Skateboard"
+    , "Someone yells to wait up"
+    , "Twerking"
+    , "Nighttime shades"
+    , "Crosswalk coward"
+    , "Separated at the crosswalk"
+    , "Sucking on a chili dog"
+    , "Yawning"
+    , "Matching outfits"
+    , "Trying to get into the wrong car"
+    , "Chug"
     ]
 
 
@@ -265,17 +263,18 @@ view model =
 
 viewHome : Maybe Board -> Browser.Document Msg
 viewHome maybeBoard =
-    { title = "F**kFace Sloppy Joe's Bingo"
+    { title = "Sloppy Bingo"
     , body =
-        [ div [ class "container mt-5" ]
-            [ h1 [ class "mb-3" ] [ text "F**kFace Sloppy Joe's Bingo" ]
+        [ div [ class "container-fluid container-lg mt-3" ]
+            [ img [ src "/header.jpg", class "d-block w-100 header mb-3" ] []
+            , h1 [ class "mb-3 d-none" ] [ text "F**kFace Sloppy Joe's Bingo" ]
             , div [ class "d-none" ]
                 [ img [ src "/fkface.webp" ] []
                 , img [ src "/fkface-red.png" ] []
                 ]
             , ul []
                 [ li []
-                    [ span [] [ text "F**kFace Sloppy Joe's Bingo being played -> " ]
+                    [ span [] [ text "Sloppy Bingo being played -> " ]
                     , a [ href "https://www.youtube.com/watch?v=kxsJ4PW_R04", target "_blank" ] [ text "[video]" ]
                     ]
                 , li []
@@ -294,7 +293,7 @@ viewHome maybeBoard =
                     [ viewResults board
                     , viewBoard board
                     ]
-        , footer [ class "container py-4" ] []
+        , footer [ class "container-fluid container-lg py-4" ] []
         ]
     }
 
@@ -317,7 +316,7 @@ generateButton maybeBoard =
 
 viewBoard : Board -> Html Msg
 viewBoard board =
-    div [ class "container my-4" ]
+    div [ class "container-fluid container-lg my-4" ]
         [ div [ class "board" ] (List.indexedMap (\idx cell -> viewCell idx cell (isWinningCell board idx)) board)
         ]
 
@@ -369,7 +368,7 @@ viewBoardLink board =
 
 viewResults : Board -> Html msg
 viewResults board =
-    div [ class "container my-4 results" ]
+    div [ class "container-fluid container-lg my-4 results" ]
         [ p [ class "mb-0" ]
             [ text
                 (if fullBingo board then

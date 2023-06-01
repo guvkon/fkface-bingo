@@ -1,11 +1,15 @@
 body {
     font-family: 'Ubuntu Mono', monospace;
 
-    background-color: #fff;
+    /* background-color: #fff;
     background-image: url("/background.png");
     background-attachment: scroll;
     background-repeat: repeat;
-    background-size: auto;
+    background-size: auto; */
+}
+
+.header {
+    max-width: 478px;
 }
 
 .board {
@@ -20,7 +24,7 @@ body {
     width: 150px;
     height: 150px;
     vertical-align: middle;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-family: 'Ubuntu Condensed', sans-serif;
     position: relative;
     border: 1px solid #000;
@@ -28,6 +32,14 @@ body {
     text-align: center;
     vertical-align: middle;
     background-color: #fff;
+}
+
+@media (max-width: 800px) {
+    .cell {
+        width: 120px;
+        height: 120px;
+        font-size: 1rem;
+    }
 }
 
 .cell:hover {

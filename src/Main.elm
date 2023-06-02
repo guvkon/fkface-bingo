@@ -263,11 +263,15 @@ view model =
 
 viewHome : Maybe Board -> Browser.Document Msg
 viewHome maybeBoard =
-    { title = "Sloppy Bingo"
+    let
+        title =
+            "Sloppy Joe's Bingo Card Generator"
+    in
+    { title = title
     , body =
         [ div [ class "container-fluid container-lg mt-3" ]
             [ img [ src "/header.jpg", class "d-block w-100 header mb-3" ] []
-            , h1 [ class "mb-3 d-none" ] [ text "F**kFace Sloppy Joe's Bingo" ]
+            , h1 [ class "mb-3 d-none" ] [ text title ]
             , div [ class "d-none" ]
                 [ img [ src "/fkface.webp" ] []
                 , img [ src "/fkface-red.png" ] []

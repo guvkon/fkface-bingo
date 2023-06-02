@@ -8060,6 +8060,7 @@ var $author$project$Main$viewResults = function (board) {
 			]));
 };
 var $author$project$Main$viewHome = function (maybeBoard) {
+	var title = 'Sloppy Joe\'s Bingo Card Generator';
 	return {
 		aq: _List_fromArray(
 			[
@@ -8087,7 +8088,7 @@ var $author$project$Main$viewHome = function (maybeBoard) {
 							]),
 						_List_fromArray(
 							[
-								$elm$html$Html$text('F**kFace Sloppy Joe\'s Bingo')
+								$elm$html$Html$text(title)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -8191,7 +8192,7 @@ var $author$project$Main$viewHome = function (maybeBoard) {
 					]),
 				_List_Nil)
 			]),
-		aE: 'Sloppy Bingo'
+		aE: title
 	};
 };
 var $author$project$Main$view = function (model) {
